@@ -11,7 +11,7 @@ Bài 1+2: DFS + BFS
   Để cho tiện, ta tạo cho mỗi phần tử trong stack/queue một cấu trúc: ( state, path )
   VD: stack.pop ( startState, [] )
   
-  Dễ thấy mỗi lần gọi hàm getSuccessors thì nó còn trả về ( state, action, cost ) nên path của state đó là prevState.path +action 
+  Dễ thấy mỗi lần gọi hàm getSuccessors thì nó còn trả về ( state, action, cost ) nên path của state đó là prevState.path +action .
   Như vậy nếu ta xác định được một state là goal thì ta cũng return được path đến nó.
   
   
