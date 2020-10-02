@@ -81,23 +81,23 @@ def solutions(problem, cauTruc):
     # stack= util.Stack()
     # cauTruc instead
 
-    path= []
+    # path= []
     visited= []
 
-    cauTruc.push((Sstate, path))
+    cauTruc.push((Sstate, []))
     
     
     while not cauTruc.isEmpty():
-        Cstate, actions = cauTruc.pop()
+        Cstate, path = cauTruc.pop()
         
         if Cstate not in visited:
             visited.append(Cstate)
     
             if problem.isGoalState(Cstate):
-                return actions
+                return path
 
             for nextState, action, cost in problem.getSuccessors(Cstate):
-                newAction=actions+[action] 
+                newAction= path+[action] 
                 cauTruc.push((nextState,newAction))        
 
     return False
