@@ -1,3 +1,4 @@
+# coding=utf-8
 # search.py
 # ---------
 # Licensing Information:  You are free to use or extend these projects for
@@ -73,33 +74,29 @@ def tinyMazeSearch(problem):
     return  [s, s, w, s, w, w, s, w]
 
 def solutions(problem, cauTruc):
+    cauTruc.push([(problem.getStartState(), "Stop", 0)])
+    visited = []
 
-    Sstate= problem.getStartState()
-    if problem.isGoalState(Sstate):
-        return []
-    
-    # stack= util.Stack()
-    # cauTruc instead
-
-    # path= []
-    visited= []
-
-    cauTruc.push((Sstate, []))
-    
-    
     while not cauTruc.isEmpty():
-        Cstate, path = cauTruc.pop()
-        
-        if Cstate not in visited:
-            visited.append(Cstate)
-    
-            if problem.isGoalState(Cstate):
-                return path
+        path = cauTruc.pop()
 
-            for nextState, action, cost in problem.getSuccessors(Cstate):
-                newAction= path+[action] 
-                cauTruc.push((nextState,newAction))        
+        curr_state = path[-1][0]
 
+        if problem.isGoalState(curr_state):
+            # trả về danh sách hành động của pacman để đi tới đích
+            # (phần tử thứ 2 trong mỗi phần tử của đường đi mà không phải là "Stop")
+            return [x[1] for x in path][1:]
+
+        if curr_state not in visited:
+            visited.append(curr_state)
+
+            for successor in problem.getSuccessors(curr_state):
+                # successor[0] = (state, action, cost)[0] = state
+                if successor[0] not in visited:
+                    successorPath = path[:]
+                    successorPath.append(successor)
+
+                    cauTruc.push(successorPath)
     return False
 
 def depthFirstSearch(problem):
@@ -135,7 +132,14 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # util.raiseNotDefined()
+
+    cost = lambda path: problem.getCostOfActions([x[1] for x in path][1:])
+
+    pq = util.PriorityQueueWithFunction(cost)
+
+    return solutions(problem, pq)
+    
 
 def nullHeuristic(state, problem=None):
     """
@@ -147,8 +151,14 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # util.raiseNotDefined()
 
+    cost = lambda path: problem.getCostOfActions([x[1] for x in path][1:]) + heuristic(path[-1][0], problem)
+
+    pq = util.PriorityQueueWithFunction(cost)
+
+    # hàng đợi ưu tiên sắp xếp theo f(x) của hành động
+    return solutions(problem, pq)
 
 # Abbreviations
 bfs = breadthFirstSearch
